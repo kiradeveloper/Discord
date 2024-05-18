@@ -1,7 +1,7 @@
-const { Client, IntentsBitField } = require('discord.js');
+const { Client, IntentsBitField, ActivityType, REST, Routes } = require('discord.js');
 require('dotenv').config();
 
-const client = new Client({
+const bot = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMembers,
@@ -10,16 +10,54 @@ const client = new Client({
     ]
 });
 
-client.on('ready', (res) => {
-    console.log(`${res.user.tag} is ready !`);
-});
-
-client.on('interactionCreate', (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName == 'ping') {
-        interaction.reply('Pong!')
+const commands = [
+    {
+        name: 'ping',
+        description: 'Replies with Pong !'
+    },
+    {
+        name: 'speedtest',
+        description: 'Show current internet download speed'
     }
-});
+];
 
-client.login(process.env.DISCORD_TOKEN);
+const rest = new REST(
+    {
+        version: '10'
+    }
+).setToken(process.env.DISCORD_TOKEN);
+
+(async () => {
+
+    try {
+
+        await rest.put(
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILDS_ID),
+            {
+                body: commands
+            }
+        )
+
+        console.log(`${commands.length} commands registered !`);
+
+        bot.on('ready', (res) => {
+            console.log(`${res.user.tag} is ready !`);
+        });
+        
+        bot.on('interactionCreate', (interaction) => {
+        
+            if (!interaction.isChatInputCommand()) return;
+        
+            if (interaction.commandName == 'ping') {
+                interaction.reply('Pong !')
+            }
+            
+        });
+        
+        bot.login(process.env.DISCORD_TOKEN);
+        
+    } catch (e) {
+        console.log(`Error : ` + e);
+    }
+
+})();
