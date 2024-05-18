@@ -4,12 +4,14 @@
   "description": "Raze is a private discord bot with amazing features .",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.15.2",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "node-fetch": "^2.6.0"
   }
 }
